@@ -10,11 +10,12 @@ class ChatLoop:
     It is responsible for confirming the next prompts, calling the code interpreter and processing results.
     """
 
-    def __init__(self, model_client: ModelClient, initial_prompt: str):
+    def __init__(self, model_client: ModelClient, assignment: str):
         self.client = model_client
-        self.initial_prompt = initial_prompt
+        self.assignment = assignment
 
     def start_main_loop(self):
+        introduction = "Here is your assignment:\n"
 
         additional_instructions = (
             "\nFirst, write your reasoning for the solution. Then, write the code to solve the assignment.\n"
@@ -23,7 +24,7 @@ class ChatLoop:
             "Enclose the Python code block inside of <CODE> and </CODE> tags.\n"
         )
 
-        next_prompt = self.initial_prompt + additional_instructions
+        next_prompt = introduction + self.assignment + additional_instructions
 
         while True:
 

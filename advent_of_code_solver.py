@@ -5,7 +5,7 @@ from code_interpreter.chat_loop import ChatLoop
 from model_client.gemini_pro import GeminiProClient
 
 # project_name = input("Enter project name: ")
-project_name = "aoc_2015_day6_part1"
+project_name = "aoc_2015_day3_part1"
 
 # create project directory if it doesn't exist
 project_dir = "projects/" + project_name
@@ -39,12 +39,12 @@ if not whole_input_data:
     exit()
 
 
-initial_prompt = f"""We want to solve the following puzzle using Python code. Here is the puzzle:
+initial_prompt = f"""We want to solve the following puzzle:
 <PUZZLE>
 {puzzle}
 </PUZZLE>
 
-The code should load the input from the file "{project_dir}/input.txt". Here is a small extract from that file:
+The data should be loaded from the file "{project_dir}/input.txt". Here is a small extract from that file:
 <INPUT DATA EXCERPT>
 {input_data_excerpt}
 </INPUT DATA EXCERPT>
