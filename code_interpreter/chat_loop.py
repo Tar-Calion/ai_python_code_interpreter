@@ -28,7 +28,7 @@ class ChatLoop:
 
         while True:
 
-            next_prompt = self.prepare_next_prompt(next_prompt)
+            next_prompt = self._prepare_next_prompt(next_prompt)
 
             # get response from LLM
             model_response = self.client.send_message(next_prompt)
@@ -36,19 +36,19 @@ class ChatLoop:
             print("Response received from the model:")
             print(model_response)
 
-            response = self.process_response(model_response)
+            response = self._process_response(model_response)
 
-            if response.responseType == ResponseType.ANSWER:
+            if response.type == ResponseType.ANSWER:
                 print("The response contains the answer. Exiting...")
                 # TODO confirm exit or get another prompt from the user
                 exit()
-            elif response.responseType == ResponseType.CODE:
-                next_prompt = self.process_code_block(response.text)
+            elif response.type == ResponseType.CODE:
+                next_prompt = self._process_code_block(response.text)
             else:
-                print("Unknown response type. Exiting...")
+                print(f"Unknown response type: {response.type}. Exiting...")
                 exit()
 
-    def prepare_next_prompt(self, next_prompt):
+    def _prepare_next_prompt(self, next_prompt):
         # confirm with user
         print("Please confirm the following prompt:")
         print(next_prompt)
@@ -60,7 +60,7 @@ class ChatLoop:
 
         return next_prompt
 
-    def process_response(self, response) -> Response:
+    def _process_response(self, response) -> Response:
 
         if "<ANSWER>" in response:
             return Response(ResponseType.ANSWER, response)
@@ -74,7 +74,7 @@ class ChatLoop:
 
         return Response(ResponseType.CODE, code_block)
 
-    def process_code_block(self, code_block):
+    def _process_code_block(self, code_block):
 
         # confirm execution of the code block
         confirmation = input("Do you want to execute the code block? (y/n)\n")

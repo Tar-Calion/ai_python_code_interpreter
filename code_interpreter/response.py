@@ -7,6 +7,6 @@ class ResponseType(Enum):
 
 
 class Response:
-    def __init__(self, responseType: ResponseType, text: str):
-        self.responseType = responseType
+    def __init__(self, type: ResponseType, text: str):
+        self.type = type
         self.text = text
