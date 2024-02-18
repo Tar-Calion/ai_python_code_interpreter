@@ -17,9 +17,8 @@ class ChatLoop:
     def start_main_loop(self):
 
         additional_instructions = (
-            "\nFirst, write your reasoning for the solution. Then, write the code to solve the puzzle.\n"
+            "\nFirst, write your reasoning for the solution. Then, write the code to solve the assignment.\n"
             "Use only Python standard libraries if possible.\n"
-            "Add print() statements on key points of the code to help debugging.\n"
             "The code should be runnable without the main() method and should print the solution to the console.\n"
             "Enclose the Python code block inside of <CODE> and </CODE> tags.\n"
         )
@@ -113,6 +112,6 @@ class ChatLoop:
             return (
                 "The code execution succeeded.\n"
                 f"{"This is standard output:\n" + stdout if stdout else ""}"
-                "Please check if the result makes sense and provide the answer between the XML tags <ANSWER> and </ANSWER>.\n"
-                "Otherwise correct the code and we will try again."
+                "Please provide the answer to the assignment between the XML tags <ANSWER> and </ANSWER>.\n"
+                "If you think the answer is not correct, please provide the corrected code between the XML tags <CODE> and </CODE> instead."
             )

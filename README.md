@@ -29,6 +29,6 @@ gcloud auth application-default login
 - Modus with auto-confirmation
 - Produce multiple solutions and compare them
 - Detect an infinite loop and reset the chat
-- Possibility to append user input to the chat messages to give hints to the LLM
 - Handle invalid responses (nether code nor answer)
+- Double-check the answer with a smarter model
 

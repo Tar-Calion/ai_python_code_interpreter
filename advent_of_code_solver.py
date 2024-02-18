@@ -5,7 +5,7 @@ from code_interpreter.chat_loop import ChatLoop
 from model_client.gemini_pro import GeminiProClient
 
 # project_name = input("Enter project name: ")
-project_name = "aoc_2015_day1_part1"
+project_name = "aoc_2015_day6_part1"
 
 # create project directory if it doesn't exist
 project_dir = "projects/" + project_name
@@ -24,8 +24,10 @@ whole_input_data = ""
 with open(os.path.join(project_dir, "input.txt"), "r") as f:
     whole_input_data = f.read()
 
-# get 300 characters of the input data
-input_data_excerpt = whole_input_data[:300]
+# get excerpt: extract 10 lines, then restrict to 200 characters
+input_data_excerpt = "\n".join(whole_input_data.split("\n")[:10])
+if len(whole_input_data) > 200:
+    input_data_excerpt = input_data_excerpt[:200]
 
 # check puzzle and input data exists
 if not puzzle:
@@ -42,10 +44,11 @@ initial_prompt = f"""We want to solve the following puzzle using Python code. He
 {puzzle}
 </PUZZLE>
 
-The code should load the input from the file "{project_dir}/input.txt". Here is the extract from that file:
+The code should load the input from the file "{project_dir}/input.txt". Here is a small extract from that file:
 <INPUT DATA EXCERPT>
 {input_data_excerpt}
 </INPUT DATA EXCERPT>
+The whole input data is {len(whole_input_data)} characters long.
 """
 
 chat_loop = ChatLoop(GeminiProClient(), initial_prompt)
