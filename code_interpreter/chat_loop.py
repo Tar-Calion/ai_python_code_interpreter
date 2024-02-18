@@ -22,7 +22,7 @@ class ChatLoop:
             "First, write your reasoning for the solution. Then, write the code to solve the assignment.\n"
             "Use only Python standard libraries if possible.\n"
             "The code should be runnable without the main() method and should print the solution to the console.\n"
-            "Enclose the Python code block inside of <CODE> and </CODE> tags.\n"
+            "Enclose the Python code block inside of <CODE> and </CODE> XML tags.\n"
         )
 
         next_prompt = introduction + self.assignment + additional_instructions
@@ -62,7 +62,7 @@ class ChatLoop:
             exit()
         else:
             print(f"Additional instructions added to the prompt: {confirmation}")
-            return next_prompt + "\n" + confirmation
+            return next_prompt + "\nAdditional instructions added by the user: " + confirmation
 
     def _process_response(self, response) -> Response:
 

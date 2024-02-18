@@ -18,7 +18,7 @@ class TestChatLoop(unittest.TestCase):
         next_prompt = "Test prompt"
         result = self.chat_loop._prepare_next_prompt(next_prompt)
         self.assertEqual(result, next_prompt)
-        mock_print.assert_has_calls([call("Please confirm the following prompt:"), call(next_prompt)])
+        mock_print.assert_has_calls([call("\nPlease confirm the following prompt:"), call(next_prompt)])
         mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
 
     @patch('builtins.input', return_value='n')
@@ -27,18 +27,19 @@ class TestChatLoop(unittest.TestCase):
     def test_prepare_next_prompt_not_confirmed(self, mock_exit, mock_print, mock_input):
         next_prompt = "Test prompt"
         self.chat_loop._prepare_next_prompt(next_prompt)
-        mock_print.assert_has_calls([call("Please confirm the following prompt:"), call(
+        mock_print.assert_has_calls([call("\nPlease confirm the following prompt:"), call(
             next_prompt), call("Prompt execution not confirmed. Exiting...")])
         mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
         mock_exit.assert_called_once()
 
-    @patch('builtins.input', return_value='Additional instructions')
+    @patch('builtins.input', return_value='use current date')
     @patch('builtins.print')
     def test_prepare_next_prompt_user_added_instructions(self, mock_print, mock_input):
         next_prompt = "Test prompt"
         result = self.chat_loop._prepare_next_prompt(next_prompt)
-        self.assertEqual(result, next_prompt + "\nAdditional instructions")
-        mock_print.assert_has_calls([call("Please confirm the following prompt:"), call(next_prompt)])
+        self.assertEqual(result, next_prompt + "\nAdditional instructions added by the user: use current date")
+        mock_print.assert_has_calls([call("\nPlease confirm the following prompt:"), call(next_prompt)],
+                                    "Additional instructions added to the prompt: use current date")
         mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
 
     # Test _process_response method
@@ -56,7 +57,7 @@ class TestChatLoop(unittest.TestCase):
         result = self.chat_loop._process_response(response)
         self.assertEqual(result.type, ResponseType.CODE)
         self.assertEqual(result.text, "def hello():\n    print('Hello, world!')")
-        mock_print.assert_has_calls([call("Code block extracted from the response:"), call("def hello():\n    print('Hello, world!')")])
+        mock_print.assert_has_calls([call("\nCode block extracted from the response:"), call("def hello():\n    print('Hello, world!')")])
 
     # Test _process_code_block method
     @patch('builtins.input', return_value='y')
@@ -64,21 +65,21 @@ class TestChatLoop(unittest.TestCase):
         code_block = "print('Hello, world!')"
         result = self.chat_loop._process_code_block(code_block)
         self.assertTrue("The code execution succeeded." in result)
-        mock_input.assert_called_once_with("Do you want to execute the code block? (y/n)\n")
+        mock_input.assert_called_once_with("\nDo you want to execute the code block? (y/n)\n")
 
     @patch('builtins.input', return_value='y')
     def test_process_code_block_failed_execution(self, mock_input):
         code_block = "print(Hello, world!)"  # This code will cause a SyntaxError
         result = self.chat_loop._process_code_block(code_block)
         self.assertTrue("The code execution failed." in result)
-        mock_input.assert_called_once_with("Do you want to execute the code block? (y/n)\n")
+        mock_input.assert_called_once_with("\nDo you want to execute the code block? (y/n)\n")
 
     @patch('builtins.input', return_value='n')
     @patch('builtins.exit')
     def test_process_code_block_not_confirmed(self, mock_exit, mock_input):
         code_block = "print('Hello, world!')"
         self.chat_loop._process_code_block(code_block)
-        mock_input.assert_called_once_with("Do you want to execute the code block? (y/n)\n")
+        mock_input.assert_called_once_with("\nDo you want to execute the code block? (y/n)\n")
         mock_exit.assert_called_once()
 
     # Test start_main_loop method
