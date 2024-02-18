@@ -52,13 +52,16 @@ class ChatLoop:
         # confirm with user
         print("Please confirm the following prompt:")
         print(next_prompt)
-        confirmation = input("Do you want to send this prompt to the model? (y/n)\n")
+        confirmation = input("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
 
-        if confirmation.lower() != "y":
+        if confirmation.lower() == "y":
+            return next_prompt
+        elif confirmation.lower() == "n":
             print("Prompt execution not confirmed. Exiting...")
             exit()
-
-        return next_prompt
+        else:
+            print(f"Additional instructions added to the prompt: {confirmation}")
+            return next_prompt + "\n" + confirmation
 
     def _process_response(self, response) -> Response:
 

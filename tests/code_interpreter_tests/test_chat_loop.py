@@ -19,7 +19,7 @@ class TestChatLoop(unittest.TestCase):
         result = self.chat_loop._prepare_next_prompt(next_prompt)
         self.assertEqual(result, next_prompt)
         mock_print.assert_has_calls([call("Please confirm the following prompt:"), call(next_prompt)])
-        mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n)\n")
+        mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
 
     @patch('builtins.input', return_value='n')
     @patch('builtins.print')
@@ -29,8 +29,17 @@ class TestChatLoop(unittest.TestCase):
         self.chat_loop._prepare_next_prompt(next_prompt)
         mock_print.assert_has_calls([call("Please confirm the following prompt:"), call(
             next_prompt), call("Prompt execution not confirmed. Exiting...")])
-        mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n)\n")
+        mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
         mock_exit.assert_called_once()
+
+    @patch('builtins.input', return_value='Additional instructions')
+    @patch('builtins.print')
+    def test_prepare_next_prompt_user_added_instructions(self, mock_print, mock_input):
+        next_prompt = "Test prompt"
+        result = self.chat_loop._prepare_next_prompt(next_prompt)
+        self.assertEqual(result, next_prompt + "\nAdditional instructions")
+        mock_print.assert_has_calls([call("Please confirm the following prompt:"), call(next_prompt)])
+        mock_input.assert_called_once_with("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
 
     # Test _process_response method
     @patch('builtins.print')
