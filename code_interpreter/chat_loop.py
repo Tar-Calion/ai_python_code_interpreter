@@ -78,6 +78,12 @@ class ChatLoop:
 
         return Response(ResponseType.CODE, code_block)
 
+    def _format_standard_output(self, stdout):
+        return f"This is standard output of the code:\n<STANDARD_OUTPUT>\n{stdout}\n</STANDARD_OUTPUT>\n"
+
+    def _format_error_output(self, stderr):
+        return f"This is the error:\n<ERROR>\n{stderr}\n</ERROR>\n"
+
     def _process_code_block(self, code_block):
 
         # confirm execution of the code block
@@ -101,19 +107,16 @@ class ChatLoop:
             error_line = codeExtractor.extract_error_line(code_block, stderr)
             return (
                 "The code execution failed.\n"
-                f"{"This is standard output:\n" + stdout if stdout else ""}"
-                f"This is the error:\n{stderr}\n"
+                f"{self._format_standard_output(stdout) if stdout else ""}"
+                f"{self._format_error_output(stderr)}"
                 f"{f'The error occurred in the following line of the code:\n{error_line}\n' if error_line else ''}"
-                "Please correct the code so that it executes without errors and solves the assignment.\n"
-                "You can use the print() function for debugging, then you will receive the standard output from me.\n"
-                "If you are getting the same error over and over, try a different approach.\n"
-                "Provide the whole corrected code between the XML tags <CODE> and </CODE>."
+                "Please provide the whole corrected code between the XML tags <CODE> and </CODE>."
 
             )
         else:
             return (
                 "The code execution succeeded.\n"
-                f"{"This is standard output:\n" + stdout if stdout else ""}"
+                f"{self._format_standard_output(stdout)}"
                 "Please provide the answer to the assignment between the XML tags <ANSWER> and </ANSWER>.\n"
                 "If you think the answer is not correct, please provide the corrected code between the XML tags <CODE> and </CODE> instead."
             )
