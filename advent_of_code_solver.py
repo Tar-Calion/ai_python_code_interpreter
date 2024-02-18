@@ -2,9 +2,10 @@
 
 import os
 from code_interpreter.chat_loop import ChatLoop
+from model_client.gemini_pro import GeminiProClient
 
 # project_name = input("Enter project name: ")
-project_name = "aoc_2015_day6_part2"
+project_name = "aoc_2015_day1_part1"
 
 # create project directory if it doesn't exist
 project_dir = "projects/" + project_name
@@ -23,11 +24,8 @@ whole_input_data = ""
 with open(os.path.join(project_dir, "input.txt"), "r") as f:
     whole_input_data = f.read()
 
-# get 10 lines of the input data as string
-input_data_excerpt = ""
-with open(os.path.join(project_dir, "input.txt"), "r") as f:
-    for i in range(10):
-        input_data_excerpt += f.readline()
+# get 300 characters of the input data
+input_data_excerpt = whole_input_data[:300]
 
 # check puzzle and input data exists
 if not puzzle:
@@ -50,5 +48,5 @@ The code should load the input from the file "{project_dir}/input.txt". Here is 
 </INPUT DATA EXCERPT>
 """
 
-chat_loop = ChatLoop()
-chat_loop.main_loop(initial_prompt)
+chat_loop = ChatLoop(GeminiProClient(), initial_prompt)
+chat_loop.start_main_loop()

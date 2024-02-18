@@ -1,7 +1,7 @@
 from vertexai.preview.generative_models import GenerativeModel
+from model_client.model_client import ModelClient
 
-
-class GeminiProClient:
+class GeminiProClient(ModelClient):
     """Client for interacting with the Gemini Pro model."""
 
     def __init__(self):
