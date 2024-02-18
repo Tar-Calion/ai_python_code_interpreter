@@ -15,10 +15,11 @@ class ChatLoop:
         self.assignment = assignment
 
     def start_main_loop(self):
-        introduction = "Here is your assignment:\n"
+        introduction = "Here is your assignment:\n<ASSIGNMEN>\n"
 
         additional_instructions = (
-            "\nFirst, write your reasoning for the solution. Then, write the code to solve the assignment.\n"
+            "\n</ASSIGNMENT>\n"
+            "First, write your reasoning for the solution. Then, write the code to solve the assignment.\n"
             "Use only Python standard libraries if possible.\n"
             "The code should be runnable without the main() method and should print the solution to the console.\n"
             "Enclose the Python code block inside of <CODE> and </CODE> tags.\n"
@@ -33,7 +34,7 @@ class ChatLoop:
             # get response from LLM
             model_response = self.client.send_message(next_prompt)
 
-            print("Response received from the model:")
+            print("\nResponse received from the model:")
             print(model_response)
 
             response = self._process_response(model_response)
@@ -50,7 +51,7 @@ class ChatLoop:
 
     def _prepare_next_prompt(self, next_prompt):
         # confirm with user
-        print("Please confirm the following prompt:")
+        print("\nPlease confirm the following prompt:")
         print(next_prompt)
         confirmation = input("Do you want to send this prompt to the model? (y/n/<your additional instructions>)\n")
 
@@ -72,7 +73,7 @@ class ChatLoop:
         codeExtractor = CodeExtractor()
         code_block = codeExtractor.extract(response)
 
-        print("Code block extracted from the response:")
+        print("\nCode block extracted from the response:")
         print(code_block)
 
         return Response(ResponseType.CODE, code_block)
@@ -80,7 +81,7 @@ class ChatLoop:
     def _process_code_block(self, code_block):
 
         # confirm execution of the code block
-        confirmation = input("Do you want to execute the code block? (y/n)\n")
+        confirmation = input("\nDo you want to execute the code block? (y/n)\n")
 
         if confirmation.lower() != "y":
             print("Code block execution not confirmed. Exiting...")
@@ -90,7 +91,7 @@ class ChatLoop:
         codeExecutor = PythonCodeExecutor()
         stdout, stderr = codeExecutor.execute(code_block)
 
-        print("Code block executed. Here is the output:")
+        print("\nCode block executed. Here is the output:")
         print(stdout)
         print("Errors:")
         print(stderr)

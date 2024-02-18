@@ -1,5 +1,3 @@
-
-
 import os
 from code_interpreter.chat_loop import ChatLoop
 from model_client.gemini_pro import GeminiProClient
